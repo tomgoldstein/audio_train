@@ -16,14 +16,18 @@ from air_daa_offline.database import populate_datastore
 from air_daa_offline import Tasks
 import h5py
 
+print('Creating dataset object...')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
 encs = dataset_generation.get_train_dataset(sys_params, nsample=None)
 
 train_name = "tom_train_store.h5"
 
+print('Populate datastore...')
 store = populate_datastore.EvalDatastore(train_name)
+print('Populate meta data...')
 populate_datastore.populate_sc_meta(encs, store)
+print('Populate ground truth...')
 populate_datastore.populate_ground_truth(encs, store)
 
 df_sc_meta = store.load('SC_META')
@@ -75,10 +79,12 @@ gt_valid = df_gt.dropna()  # drop the data samples with no GT labels
 
 ## Create the h5 file and write to it
 dataset_home = '/home/ubuntu/datasets/raw_audio_and_groundtruth.h5'
+print('Creating h5 file at location ', dataset_home)
 f = h5py.File(dataset_home, 'w')
 
+print('Begin processing flights ', dataset_home)
 for i in gt_valid.index:  # Loop over flight names
-    print('Processing ', i[0])
+    print('    Processing ', i[0])
     time_arr, audio_arr, gt_interp = create_interpolated_ground_truth(i[0])
     grp = f.create_group(i[0])
     grp['timestamp'] = time_arr
