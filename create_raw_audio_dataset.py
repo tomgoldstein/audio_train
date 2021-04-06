@@ -19,7 +19,7 @@ import h5py
 print('Creating dataset object...')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
-encs = dataset_generation.get_train_dataset(sys_params, nsample=None)
+encs = dataset_generation.get_train_dataset(sys_params, nsample=150)
 
 train_name = "tom_train_store.h5"
 
