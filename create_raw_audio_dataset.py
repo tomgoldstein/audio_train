@@ -83,10 +83,13 @@ print('Creating h5 file at location ', dataset_home)
 f = h5py.File(dataset_home, 'w')
 
 print('Begin processing flights ', dataset_home)
-for i in gt_valid.index:  # Loop over flight names
-    print('    Processing ', i[0])
-    time_arr, audio_arr, gt_interp = create_interpolated_ground_truth(i[0])
-    grp = f.create_group(i[0])
+
+flight_names = set(i[0] for i in gt_valid.index)
+
+for n in flight_names:  # Loop over flight names
+    print('    Processing ', n)
+    time_arr, audio_arr, gt_interp = create_interpolated_ground_truth(n)
+    grp = f.create_group(n)
     grp['timestamp'] = time_arr
     grp['audio'] = audio_arr
     grp['ground_truth'] = gt_interp
