@@ -42,8 +42,11 @@ def create_interpolated_ground_truth(logs_id):
     Also check for data validity: the GT timestamp needs to cover a wider temporal range than the audio timestamp.
     If not, the GT interpolation will produce invalid results"""
     # Extract audio data, and it's timestamp
+    print('   processing id: ', logs_id)
     models_out = helper.get_models_out(logs_id, sys_params)
+    print('   processing audio')
     audio_arr = models_out.enc_sources.ess.audio_arr
+    print('   audio shape: ', audio_arr.shape)
     time_arr = models_out.enc_sources.ess.audio_utcdatetime
     audio_min = time_arr.min()
     audio_max = time_arr.max()
