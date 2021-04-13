@@ -20,7 +20,7 @@ import h5py
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--start', type=int, help='first entry to grab')
 parser.add_argument('--end', type=int, help='last entry to grab')
-args = parser.parse_args(['--sum', '7', '-1', '42'])
+args = parser.parse_args()
 
 print('Creating dataset object...')
 ## Create a data store and populate it with all the data.  This can take a long time.
