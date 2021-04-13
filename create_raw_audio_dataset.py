@@ -92,6 +92,7 @@ for n in flight_names:  # Loop over flight names
         try:
             time_arr, audio_arr, gt_interp = create_interpolated_ground_truth(n)
             grp = f.create_group(n)
+            print('   numel = ', audio_arr.size)
             grp['timestamp'] = time_arr
             grp['audio'] = audio_arr
             grp['ground_truth'] = gt_interp
