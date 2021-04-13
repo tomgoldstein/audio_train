@@ -6,6 +6,7 @@ easy to create lablled datasets.
 """
 
 from pprint import pprint
+import argparse
 import numpy as np
 import pandas as pd
 idx = pd.IndexSlice
@@ -16,10 +17,15 @@ from air_daa_offline.database import populate_datastore
 from air_daa_offline import Tasks
 import h5py
 
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--start', type=int, help='first entry to grab')
+parser.add_argument('--end', type=int, help='last entry to grab')
+args = parser.parse_args(['--sum', '7', '-1', '42'])
+
 print('Creating dataset object...')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
-encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(0,40))
+encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
 
 train_name = "tom_train_store.h5"
 
