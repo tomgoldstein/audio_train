@@ -50,18 +50,24 @@ def create_interpolated_ground_truth(logs_id):
     assert len(audio_arr) == len(time_arr), 'Audio and timestamp have incompatible dimensions'
     assert audio_arr.shape[1] == 8, 'Number of mics in audio source is not 8'
 
-    # Get the ground truth data.
-    gt_vals = df_gt['gt_r_b'][logs_id]
-    gt_min = gt_vals.index.min()
-    gt_max = gt_vals.index.max()
+    # Get the ground truth distance data (meters).
+    gt_dist = df_gt['gt_r_b'][logs_id]
+    gt_min = gt_dist.index.min()
+    gt_max = gt_dist.index.max()
 
     assert gt_min <= audio_min, f"[{logs_id}]: GT record starts after audio.  Cannot interpolate GT onto audio timestamp."
     assert gt_max >= audio_max, f"[{logs_id}]: GT record ends before audio.  Cannot interpolate GT onto audio timestamp."
 
     # The GT timestamp is not the same as the audio timestamp, so do interpolation.
     s = pd.Series(index=time_arr, dtype=np.float64)
-    gt_interp = gt_vals.append(s).interpolate(method='cubic')
-    gt_interp = gt_interp[s.index]
+    gt_dist_interp = gt_dist.append(s).interpolate(method='cubic')
+    gt_dist_interp = gt_dist_interp[s.index]
+
+    # Get the ground truth angle data (meters).
+    gt_dist = df_gt['gt_az_b'][logs_id]
+    s = pd.Series(index=time_arr, dtype=np.float64)
+    gt_angle_interp = gt_dist.append(s).interpolate(method='cubic')
+    gt_angle_interp = gt_angle_interp[s.index]
 
     # Plot results to show that interpolated GT looks like original GT, but with different points in the timestamp.
     #     plt.subplots(figsize=(18,8 ))
@@ -71,7 +77,7 @@ def create_interpolated_ground_truth(logs_id):
     #     gt_interp.plot()
 
     # Return nx1 timestamp, nx8 audio, nx1 ground truth
-    return time_arr, audio_arr, gt_interp.to_numpy()
+    return time_arr, audio_arr, gt_dist_interp.to_numpy(), gt_angle_interp.to_numpy()
 
 
 ## Throw out the datasets with no ground truth, and
@@ -90,12 +96,13 @@ for n in flight_names:  # Loop over flight names
     print('    Processing ', n)
     if n not in f.keys():
         try:
-            time_arr, audio_arr, gt_interp = create_interpolated_ground_truth(n)
+            time_arr, audio_arr, gt_dist, gt_angle = create_interpolated_ground_truth(n)
             grp = f.create_group(n)
             print('   numel = ', audio_arr.size)
             grp['timestamp'] = time_arr
             grp['audio'] = audio_arr
-            grp['ground_truth'] = gt_interp
+            grp['dist'] = gt_dist
+            grp['angle'] = gt_angle
             f.flush()
         except Exception as e:
             print(str(e))
