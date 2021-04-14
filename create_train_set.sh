@@ -1,5 +1,5 @@
 # bash
-python create_raw_audio_dataset.py --start=0 --end=50
+python create_raw_audio_dataset.py --start=40 --end=50
 python create_raw_audio_dataset.py --start=50 --end=100
 python create_raw_audio_dataset.py --start=100 --end=150
 python create_raw_audio_dataset.py --start=150 --end=160
