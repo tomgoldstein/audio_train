@@ -95,7 +95,7 @@ gt_valid = df_gt.dropna()  # drop the data samples with no GT labels
 ## Create the h5 file and write to it
 dataset_home = '/optional_dirs/datasets/raw_audio_and_groundtruth.h5'
 print('Creating h5 file at location ', dataset_home)
-f = h5py.File(dataset_home, 'w')
+f = h5py.File(dataset_home, 'a')
 
 print('Begin processing flights ', dataset_home)
 
