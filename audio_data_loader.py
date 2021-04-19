@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import h5py
 import numpy as np
 
@@ -57,20 +57,25 @@ class AudioDataset(Dataset):
 
 
 
-# f = h5py.File('temp.h5','w')
-# grp = f.create_group('test_group')
-# a = np.linspace(0,100,101)
-# grp['timestamp'] = np.linspace(0,100,101)
-# grp['audio'] = np.linspace(0,1,101)
-# grp['dist'] = np.linspace(0,2000,101)
-# grp['angle'] = np.linspace(-np.pi,np.pi,101)
-# f.close()
+f = h5py.File('temp.h5','w')
+for i in range(20):
+    grp_name = f'test_group_{i}'
+    print(grp_name)
+    grp = f.create_group(grp_name)
+    a = np.linspace(0,100,10001)
+    grp['timestamp'] = np.linspace(0,100,10001)
+    grp['audio'] = np.linspace(0,1,10001)
+    grp['dist'] = np.linspace(0,2000,10001)
+    grp['angle'] = np.linspace(-np.pi,np.pi,10001)
+    f.close()
 
 f = h5py.File('temp.h5','r')
 ds = AudioDataset(f, length_of_sample=99, num_angle_bins=10, distance_bins=[600,1000,1500])
 
-ts, audio, dist, angle = ds[0]
-print('timestamp: ', ts)
-print('audio: ', audio)
-print('dist: ', dist)
-print('angle: ', angle)
+loader = DataLoader(ds, batch_size=2, shuffle=True, num_workers=0)
+
+for ts, audio, dist, angle in loader:
+    print('timestamp: ', ts)
+    print('audio: ', audio)
+    print('dist: ', dist)
+    print('angle: ', angle)

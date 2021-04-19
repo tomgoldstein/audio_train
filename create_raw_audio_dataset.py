@@ -27,7 +27,8 @@ print(f'Creating dataset object: {args.start} - {args.end}')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
 #encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
-encs = dataset_generation.get_dev_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
+#encs = dataset_generation.get_dev_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
+encs = dataset_generation.get_test_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
 
 
 train_name = "tom_train_store.h5"
@@ -96,7 +97,7 @@ def create_interpolated_ground_truth(logs_id):
 gt_valid = df_gt.dropna()  # drop the data samples with no GT labels
 
 ## Create the h5 file and write to it
-dataset_home = '/optional_dirs/datasets/raw_audio_and_groundtruth.h5'
+dataset_home = '/optional_dirs/datasets/raw_audio_and_groundtruth_test.h5'
 print('Creating h5 file at location ', dataset_home)
 f = h5py.File(dataset_home, 'a')
 
