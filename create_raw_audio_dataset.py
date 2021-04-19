@@ -23,7 +23,7 @@ parser.add_argument('--end', type=int, help='last entry to grab')
 args = parser.parse_args()
 
 
-print(f'Creating dataset object: {args.star} - {args.end}')
+print(f'Creating dataset object: {args.start} - {args.end}')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
 #encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
