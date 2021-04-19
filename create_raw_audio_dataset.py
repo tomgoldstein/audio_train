@@ -22,10 +22,13 @@ parser.add_argument('--start', type=int, help='first entry to grab')
 parser.add_argument('--end', type=int, help='last entry to grab')
 args = parser.parse_args()
 
-print('Creating dataset object...')
+
+print(f'Creating dataset object: {args.star} - {args.end}')
 ## Create a data store and populate it with all the data.  This can take a long time.
 sys_params = populate_datastore.get_default_sys_params()
-encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
+#encs = dataset_generation.get_train_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
+encs = dataset_generation.get_dev_dataset(sys_params, nsample=None, index_slice=slice(args.start,args.end))
+
 
 train_name = "tom_train_store.h5"
 
@@ -48,11 +51,11 @@ def create_interpolated_ground_truth(logs_id):
     Also check for data validity: the GT timestamp needs to cover a wider temporal range than the audio timestamp.
     If not, the GT interpolation will produce invalid results"""
     # Extract audio data, and it's timestamp
-    print('   processing id: ', logs_id)
+    #print('   processing id: ', logs_id)
     models_out = helper.get_models_out(logs_id, sys_params)
-    print('   processing audio')
+    #print('   processing audio')
     audio_arr = models_out.enc_sources.ess.audio_arr
-    print('   audio shape: ', audio_arr.shape)
+    #print('   audio shape: ', audio_arr.shape)
     time_arr = models_out.enc_sources.ess.audio_utcdatetime
     audio_min = time_arr.min()
     audio_max = time_arr.max()
